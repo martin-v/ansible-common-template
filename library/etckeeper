@@ -1,0 +1,108 @@
+#!/usr/bin/python2
+#
+# Author:  Felix Kaiser <felix.kaiser@fxkr.net>
+# License: revised BSD
+# Version: 1.0.0
+# Source:  https://github.com/fxkr/ansible-etckeeper
+#
+# To test this, use:
+#
+#   mkdir test
+#   export ETCKEEPER_DIR="$(realpath test)"
+#   etckeeper init
+#   ansible localhost -m "etckeeper" -a "action=begin"
+#   ansible localhost -m "etckeeper" -a "action=commit msg=..."
+
+
+DOCUMENTATION = '''
+---
+module: etckeeper
+short_description: Provides a concise way to invoke etckeeper before and after plays.
+'''
+
+EXAMPLES = '''
+# Put this at the beginning of all plays.
+# It ensures that the play starts with a clean /etc.
+- etckeeper: action=begin
+
+# Put this at the end of all normal plays.
+# If there were changes in /etc, it'll commit them.
+- etckeeper: action=commit msg="foo"
+
+# Put this at the end of all plays only including other plays.
+# It does the same thing "begin" does: ensuring /etc is clean.
+- etckeeper: action=end
+
+# If you want, you can add the git revision of the playbook
+# to the commit messages:
+- set_fact:
+    revision: "{{ lookup('pipe', 'cd \"%s\" ; git rev-parse HEAD' % playbook_dir) }}"
+- etckeeper: "action=commit msg='foo' rev={{ revision }}"
+
+# There are two notable exceptions:
+#
+# 1. A role responsible for installing etckeeper can't use "etckeeper action=begin"
+#    during the first run, because etckeeper won't be available yet. However,
+#    during subsequent runs, you actually do want action=begin to ensure /etc is clean.
+#    The solution is:
+- etckeeper: action=begin ignore_missing_etckeeper=yes
+
+# 2. etckeeper will create commits during package management actions automatically.
+#    Therefore, apt/yum/... tasks should be outside (ideally: before) an etckeeper begin/end.
+'''
+
+from os.path import exists
+from ansible.module_utils.basic import *
+import distutils.spawn
+
+def main():
+
+    module = AnsibleModule(
+        supports_check_mode=True,
+        argument_spec={
+            'action': dict(required=True, choices=['begin', 'commit', 'end']),
+            'ignore_missing_etckeeper': dict(default='no', choices=BOOLEANS),
+            'msg': dict(),
+            'rev': dict(),
+        }
+    )
+
+    if not distutils.spawn.find_executable('etckeeper'):
+        if module.params['ignore_missing_etckeeper']:
+            module.exit_json()
+
+    rc, out, err = module.run_command(['etckeeper', 'unclean'])
+    if err:
+        module.fail_json(msg=err)
+    is_clean = (rc != 0)
+
+    if module.params['action'] in ('begin', 'end'):
+        if is_clean:
+            module.exit_json()
+        else:
+            module.fail_json(msg='/etc is not clean')
+
+
+    elif module.params['action'] == 'commit':
+        if module.check_mode:
+            if is_clean:
+                module.exit_json(changed=False)
+            else:
+                module.fail_json(msg='/etc is supposed to remain clean in check mode')
+        if not is_clean:
+            msg = module.params['msg']
+            if not msg:
+                module.fail_json(msg='msg must not be empty')
+            if module.params['rev']:
+                msg += "\n\nRevision: " + module.params['rev']
+            rc, out, err = module.run_command(['etckeeper', 'commit', msg], check_rc=True)
+            if err:
+                module.fail_json(msg=err)
+        module.exit_json(changed=not is_clean)
+
+    else:
+        module.fail_json(msg='bad action: "%s"' % module.params['action'])
+
+
+if __name__ == '__main__':
+    main()

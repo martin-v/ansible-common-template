@@ -1,0 +1,53 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Upgrade packages for Debian based systems
+  tags: [ packages, updates, upgrades ]
+  apt: upgrade=yes update_cache=yes
+  when: ansible_os_family == 'Debian'
+
+- name: Upgrade packages for RedHat based systems
+  tags: [ packages, updates, upgrades ]
+  dnf: name=* state=latest
+  when: ansible_os_family == 'RedHat'
+
+
+- name: Install packages
+  package: name={{ item }} state=present
+  tags: [ packages ]
+  with_items:
+
+  # Essentials
+  - vim
+  - screen
+  - tmux
+  - wget
+  - curl
+  - tree
+  - sudo
+  - zsh
+  - bash-completion
+  - sudo
+  - mosh
+  - pv
+  - kpartx
+  - git
+  - apg
+
+  # Admin tools
+  - htop
+  - strace
+  - ltrace
+  - iotop
+  - tcpdump
+
+
+- name: Install os family diverse packages
+  package: name={{ item }} state=present
+  tags: [ packages ]
+  with_items: "{{ os_family_diverse_packages }}"
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.packages' rev={{ revision }}"

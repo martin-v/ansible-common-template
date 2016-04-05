@@ -1,0 +1,28 @@
+---
+
+- hosts: all
+  roles:
+  - etckeeper
+  tags:
+  - always
+
+
+- hosts: all
+  roles:
+  - { role: debian, when: ansible_os_family == 'Debian' }
+  - common
+  - { role: account, username: root, userhome: /root }
+  - { role: account, username: SOME_USERNAME, userhome: /home/SOME_USERNAME }
+  - { role: account, username: OTHER_USERNAME, userhome: /SOME_WHERE_ELSE }
+  vars_files:
+  - "group_vars/os_{{ ansible_os_family|lower }}.yml"
+
+
+- hosts: physical_hosts
+  roles:
+  - physicalhost
+
+
+- hosts: all
+  roles:
+  - end

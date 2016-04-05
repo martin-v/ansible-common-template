@@ -1,0 +1,18 @@
+---
+
+- name: Deploy gitconfig for {{ username }}
+  copy:
+    src: gitconfig
+    dest: "{{ userhome }}/.gitconfig"
+    force: yes
+    backup: yes
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Create user gitconfig for {{ username }}
+  copy:
+    content: "[user]\n	name = \n	email = \n"
+    dest: "{{ userhome }}/.gitconfig.user"
+    force: no
+    owner: "{{ username }}"
+    group: "{{ username }}"

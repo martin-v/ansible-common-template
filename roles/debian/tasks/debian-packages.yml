@@ -1,0 +1,22 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Uninstall debian packages
+  tags: [ packages ]
+  package: name={{ item }} state=absent
+  with_items:
+  - nfs-common
+  - rpcbind
+
+- name: Install debian packages
+  package: name={{ item }} state=present
+  tags: [ packages ]
+  with_items:
+  - debian-goodies # checkrestart
+  - molly-guard # No accidental shutdowns
+  - vim-nox # vim without gui, but with many plugins
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.packages' rev={{ revision }}"

@@ -1,0 +1,16 @@
+---
+
+- name: Creates htoprc directory for {{ username }}
+  file:
+    path: "{{ userhome }}/.config/htop"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Deploy htoprc for {{ username }}
+  copy:
+    src: htoprc
+    dest: "{{ userhome }}/.config/htop/htoprc"
+    force: no
+    owner: "{{ username }}"
+    group: "{{ username }}"

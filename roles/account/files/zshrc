@@ -1,0 +1,41 @@
+#! /bin/zsh
+# executed for each zsh
+
+umask 077
+
+# history config
+HISTSIZE=1000000
+HISTIGNORE="&:ls:ll:la:l.:pwd:exit:clear:run-help"
+
+
+# global aliases
+alias -g '...'='../..'
+alias -g '....'='../../..'
+alias -g '.....'='../../../..'
+alias -g G='|grep'
+alias -g T='|tail'
+
+
+# aliases
+alias g=git
+alias grep='grep --color=auto'
+alias ls='ls -hF --color=always'
+alias pwg='apg -M NCL -n 1 -a 1 -m 16'
+alias smv='rsync -avzP --remove-source-files' # scp for mv
+
+alias tgz='tar -cvzf'
+alias tbz2='tar -cvjf'
+alias utgz='tar -xvzf'
+alias utbz2='tar -xvjf'
+
+lt() { ls -ltra "$@" | tail; }
+psgrep() { ps axuf | grep -v grep | grep "$@" -i --color=auto; }
+fname() { if (( $# > 1 )); then find $1 -iname "*$2*"; else	find . -iname "*$1*"; fi }
+ff() { grep -inr "$*" . ; }
+ducks() { du -cks $@* | sort -rn | head -11 }
+
+httpShare(){ echo "link: http://`hostname`:8080/$1"; {echo -e "HTTP/1.1 200 OK\r\nContent-Type: `file -b -i $1`\r\n\r\n"; cat $1;} | nc -l 8080; }
+
+
+# load config for desktop computer if exists
+xsource "${ZDOTDIR:-${HOME}}/.zshrc.desktop"

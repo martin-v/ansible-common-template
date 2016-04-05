@@ -1,0 +1,17 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Install packages
+  package: name={{ item }} state=present
+  tags: [ packages ]
+  with_items:
+  - ethtool
+  - hdparm
+  - iperf
+  - lshw
+  - smartmontools
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.main' rev={{ revision }}"

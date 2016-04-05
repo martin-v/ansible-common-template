@@ -1,0 +1,12 @@
+---
+
+- etckeeper: action=begin
+
+- name: Install package for etckeeper-notifications
+  package: name=git-email state=present
+
+- name: Deploy configuration for etckeeper-notifications
+  copy: src=post-commit dest=/etc/.git/hooks/post-commit force=yes mode=755
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.etckeeper-notifications' rev={{ revision }}"

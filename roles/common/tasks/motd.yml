@@ -1,0 +1,10 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Clear motd
+  copy: dest=/etc/motd content=""
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.motd' rev={{ revision }}"

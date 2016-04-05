@@ -1,0 +1,7 @@
+.vagrant
+*.bak
+*.swp
+*.tmp
+*~
+playbook.retry
+secrets.yml

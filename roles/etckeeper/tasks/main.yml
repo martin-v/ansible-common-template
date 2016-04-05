@@ -1,0 +1,18 @@
+---
+
+- etckeeper: action=begin ignore_missing_etckeeper=yes
+
+
+- name: Install etckeeper
+  package: name=etckeeper state=present
+
+- name: Init etckeeper
+  shell: etckeeper init
+  args:
+    creates: /etc/.git/index
+
+- set_fact:
+    revision: "{{ lookup('pipe', 'cd \"%s\" ; git rev-parse HEAD' % playbook_dir) }}"
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.main' rev={{ revision }}"

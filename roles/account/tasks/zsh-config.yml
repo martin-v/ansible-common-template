@@ -1,0 +1,17 @@
+---
+
+- name: Install grml zshrc for {{ username }}
+  get_url:
+    url: "https://raw.githubusercontent.com/grml/grml-etc-core/master/etc/zsh/zshrc"
+    dest: "{{ userhome }}/.zshrc"
+    force: yes
+  become_user: "{{ username }}"
+
+- name: Install zshrc.local for {{ username }}
+  copy:
+    src: zshrc
+    dest: "{{ userhome }}/.zshrc.local"
+    force: yes
+    backup: yes
+    owner: "{{ username }}"
+    group: "{{ username }}"

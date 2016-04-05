@@ -1,0 +1,5 @@
+[production_hosts]
+YOUR_SERVER
+
+[physical_hosts]
+YOUR_SERVER_IF_IT_IS_PHYSICAL

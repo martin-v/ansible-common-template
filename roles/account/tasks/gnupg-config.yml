@@ -1,0 +1,55 @@
+---
+
+- name: Ensure that gnupg config directory exist for {{ username }}
+  file:
+    path: "{{ userhome }}/.gnupg"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: Ensure that gnupg config file exist for {{ username }}
+  file:
+    path: "{{ userhome }}/.gnupg/gpg.conf"
+    state: touch
+    owner: "{{ username }}"
+    group: "{{ username }}"
+  changed_when: false # TODO hack for https://github.com/ansible/ansible-modules-core/issues/170
+
+
+- name: Disable gnupg copyright notice for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?no-greeting"
+    line: "no-greeting"
+
+
+- name: Set gnupg charset to utf-8 for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?charset.*"
+    line: "charset utf-8"
+
+- name: Gnupg should fuck off short dos filenames for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?no-mangle-dos-filenames"
+    line: "no-mangle-dos-filenames"
+
+
+- name: Gnupg personal-digest SHA512 for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?personal-digest-preferences.*"
+    line: "personal-digest-preferences SHA512"
+
+- name: Gnupg cert-digest SHA512 for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?cert-digest-algo.*"
+    line: "cert-digest-algo SHA512"
+
+- name: Gnupg better default-preference-list for {{ username }}
+  lineinfile:
+    dest: "{{ userhome }}/.gnupg/gpg.conf"
+    regexp: "^#?default-preference-list.*"
+    line: "default-preference-list SHA512 SHA384 SHA256 CAMELLIA256 AES256 CAMELLIA192 AES192 ZLIB BZIP2 ZIP Uncompressed"

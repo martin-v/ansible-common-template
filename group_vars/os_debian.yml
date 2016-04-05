@@ -1,0 +1,13 @@
+---
+
+sudo_group: sudo
+
+
+os_family_diverse_packages:
+  - realpath # returns the real path, in RedHat in coreutils included
+  - dnsutils # for nslookup and dig, in RedHat called bind-utils
+  - mtr-tiny # better traceroute, in RedHat called mtr
+  - ack-grep # grep for programmers, in RedHat called ack
+
+
+editor: /usr/bin/vim.nox

@@ -1,0 +1,10 @@
+---
+
+- etckeeper: action=begin
+
+- include: debian-packages.yml
+- include: unattended-upgrades.yml
+- include: exim.yml
+
+- etckeeper: action=end
+

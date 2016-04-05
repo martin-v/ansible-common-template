@@ -1,0 +1,15 @@
+---
+
+- etckeeper: action=begin
+
+
+- include: create-user.yml
+- include: deploy-ssh-keys.yml
+- include: git-config.yml
+- include: htoprc-deploy.yml
+- include: zsh-config.yml
+- include: gnupg-config.yml
+
+
+- etckeeper: action=end
+

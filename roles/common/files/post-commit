@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Do not send any mails until the initial provisioning is complete
+if [ -f /etc/.provisioned ] ; then
+
+  # Send mail with logstat (not entire diff, because that could contain secrets)
+  git show --stat | mail -s "etckeeper $(hostname --fqdn)" root
+fi
+

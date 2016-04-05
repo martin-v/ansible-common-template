@@ -1,0 +1,10 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Deploy screenrc
+  copy: src=screenrc dest=/etc/screenrc force=yes
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.screen' rev={{ revision }}"

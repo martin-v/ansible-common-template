@@ -1,0 +1,10 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: NTP deamon
+  package: name=ntp state=present
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.ntp' rev={{ revision }}"

@@ -1,0 +1,13 @@
+---
+
+sudo_group: wheel
+
+
+os_family_diverse_packages:
+  - coreutils # returns the real path, in debian in realpath included
+  - bind-utils # for nslookup and dig, in debian called dnsutils
+  - mtr # better traceroute, in debian called mtr-tiny
+  - ack # grep for programmers, in debian called ack-grep
+
+
+editor: /usr/bin/vim

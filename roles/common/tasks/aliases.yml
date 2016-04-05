@@ -1,0 +1,15 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Set root mail
+  notify:
+  - Reload aliases
+  lineinfile:
+    dest: /etc/aliases
+    regexp: '^root:'
+    line: "root:\t{{ admin_mail }}"
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.aliases' rev={{ revision }}"

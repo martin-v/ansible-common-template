@@ -1,0 +1,37 @@
+startup_message off
+deflogin on
+autodetach on
+vbell off
+vbell_msg ""
+defscrollback 1024
+defnonblock 5
+
+bind ^k
+bind ^\
+bind \\ quit
+bind K kill
+bind I login on
+bind O login off
+bind } history
+
+hardstatus off
+hardstatus lastline
+
+altscreen on
+
+# The vt100 description does not mention "dl". *sigh*
+termcapinfo vt100 dl=5\E[M
+# Set the hardstatus prop on gui terms to set the titlebar/icon title
+termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
+# Set these terminals up to be 'optimal' instead of vt100
+termcapinfo xterm*|linux*|rxvt*|Eterm* OP
+# Fix for Konsole bug #134198
+termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+# Make screen use normal buffer, not alternate one, so that lines are added to xterms scrollback
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+
+# Enable scrolling
+termcapinfo xterm* ti@:te@
+
+hardstatus alwayslastline '%{= kw} %-Lw%{= KW}%n%1f %t%{-}%+Lw%='
+

@@ -1,0 +1,5 @@
+---
+
+admin_mail: vagrant
+
+ansible_user: vagrant

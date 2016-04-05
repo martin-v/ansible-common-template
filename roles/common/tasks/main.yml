@@ -1,0 +1,16 @@
+---
+
+- etckeeper: action=begin
+
+
+- include: packages.yml
+- include: ntp.yml
+
+- include: motd.yml
+- include: editor.yml
+- include: screen.yml
+- include: aliases.yml
+- include: etckeeper-notifications.yml
+
+
+- etckeeper: action=end

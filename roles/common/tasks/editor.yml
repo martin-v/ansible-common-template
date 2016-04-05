@@ -1,0 +1,15 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Set editor default alternative
+  alternatives: name=editor path={{ editor }}
+  when: ansible_os_family == 'Debian'
+
+
+- name: Set editor default $EDITOR
+  lineinfile: dest=/etc/environment regexp=^EDITOR= line=EDITOR={{ editor }}
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.editor' rev={{ revision }}"

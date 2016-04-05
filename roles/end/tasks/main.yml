@@ -1,0 +1,10 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: Create /etc/.provisioned marker file
+  copy: dest=/etc/.provisioned content=""
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.main' rev={{ revision }}"

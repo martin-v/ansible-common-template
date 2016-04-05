@@ -1,0 +1,104 @@
+---
+
+- etckeeper: action=begin
+
+
+- name: set mailname
+  copy: dest=/etc/mailname content="{{ inventory_hostname }}.{{ domainname }}\n"
+
+- name: "exim: dc_eximconfig_configtype"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^^dc_eximconfig_configtype=.*$"
+    replace: "dc_eximconfig_configtype='internet'"
+  register: dc_eximconfig_configtype
+
+- name: "exim: dc_other_hostnames"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_other_hostnames=.*$"
+    replace: "dc_other_hostnames='{{ inventory_hostname }}.{{ domainname }}'"
+  register: dc_other_hostnames
+
+- name: "exim: dc_local_interfaces"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_local_interfaces=.*$"
+    replace: "dc_local_interfaces='127.0.0.1 ; ::1'"
+  register: dc_local_interfaces
+
+- name: "exim: dc_readhost"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_readhost=.*$"
+    replace: "dc_readhost=''"
+  register: dc_readhost
+
+- name: "exim: dc_relay_domains"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_relay_domains=.*$"
+    replace: "dc_relay_domains=''"
+  register: dc_relay_domains
+
+- name: "exim: dc_minimaldns"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_minimaldns=.*$"
+    replace: "dc_minimaldns='false'"
+  register: dc_minimaldns
+
+- name: "exim: dc_relay_nets"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_relay_nets=.*$"
+    replace: "dc_relay_nets=''"
+  register: dc_relay_nets
+
+- name: "exim: dc_smarthost"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_smarthost=.*$"
+    replace: "dc_smarthost=''"
+  register: dc_smarthost
+
+- name: "exim: dc_use_split_config"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_use_split_config=.*$"
+    replace: "dc_use_split_config='false'"
+  register: dc_use_split_config
+
+- name: "exim: dc_localdelivery"
+  replace:
+  args:
+    dest: /etc/exim4/update-exim4.conf.conf
+    regexp: "^dc_localdelivery=.*$"
+    replace: "dc_localdelivery='mail_spool'"
+  register: dc_localdelivery
+
+- name: Update exim4-config debconf
+  command: dpkg-reconfigure -f noninteractive exim4-config
+  when: >
+    dc_eximconfig_configtype.changed
+    or dc_other_hostnames.changed
+    or dc_local_interfaces.changed
+    or dc_readhost.changed
+    or dc_relay_domains.changed
+    or dc_minimaldns.changed
+    or dc_relay_nets.changed
+    or dc_smarthost.changed
+    or dc_use_split_config.changed
+    or dc_localdelivery.changed
+
+
+- etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.exim' rev={{ revision }}"
