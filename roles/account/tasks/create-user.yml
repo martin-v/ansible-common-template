@@ -7,15 +7,9 @@
   user:
     name: "{{ username }}"
     home: "{{ userhome }}"
+    groups: "{{ usergroups | default('') }}"
     shell: /usr/bin/zsh
     update_password: on_create
-
-- name: Set sudoers group if configured for {{ username }}
-  user:
-    name: "{{ username }}"
-    groups: "{{ sudo_group }}"
-    append: yes
-  when: username in sudoers and username != "root"
 
 
 - etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.create-user' rev={{ revision }}"

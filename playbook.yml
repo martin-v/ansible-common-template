@@ -12,8 +12,8 @@
   - { role: debian, when: ansible_os_family == 'Debian' }
   - common
   - { role: account, username: root, userhome: /root }
-  - { role: account, username: SOME_USERNAME, userhome: /home/SOME_USERNAME }
-  - { role: account, username: OTHER_USERNAME, userhome: /SOME_WHERE_ELSE }
+  - { role: account, username: SOME_USERNAME, userhome: /home/SOME_USERNAME, usergroups: "{{ sudo_group }}" }
+  - { role: account, username: OTHER_USERNAME, userhome: /SOME_WHERE_ELSE, usergroups: "{{ sudo_group }}" }
   vars_files:
   - "group_vars/os_{{ ansible_os_family|lower }}.yml"
 
