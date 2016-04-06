@@ -4,3 +4,6 @@ common-debian66 ansible_ssh_host=192.168.121.66
 
 [physical_hosts]
 common-debian65
+
+[staging_smarthost_hosts]
+common-debian66

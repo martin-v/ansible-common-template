@@ -1,0 +1,5 @@
+---
+
+debian_mail_smarthost:
+  name: testsmahost
+  port: 1234

@@ -6,14 +6,64 @@
 - name: set mailname
   copy: dest=/etc/mailname content="{{ inventory_hostname }}.{{ domainname }}\n"
 
-- name: "exim: dc_eximconfig_configtype"
-  replace:
-  args:
-    dest: /etc/exim4/update-exim4.conf.conf
-    regexp: "^^dc_eximconfig_configtype=.*$"
-    replace: "dc_eximconfig_configtype='internet'"
-  register: dc_eximconfig_configtype
 
+# INTERNET HOST SPECIFIC
+- block:
+    - name: "exim: dc_eximconfig_configtype"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_eximconfig_configtype=.*$"
+        replace: "dc_eximconfig_configtype='internet'"
+      register: dc_eximconfig_configtype
+
+    - name: "exim: dc_smarthost"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_smarthost=.*$"
+        replace: "dc_smarthost=''"
+      register: dc_smarthost
+
+    - name: "exim: dc_readhost"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_readhost=.*$"
+        replace: "dc_readhost=''"
+      register: dc_readhost
+
+  when: debian_mail_smarthost is not defined
+
+# SMARTHOST SPECIFIC
+- block:
+    - name: "exim: dc_eximconfig_configtype"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_eximconfig_configtype=.*$"
+        replace: "dc_eximconfig_configtype='satellite'"
+      register: dc_eximconfig_configtype
+
+    - name: "exim: dc_smarthost"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_smarthost=.*$"
+        replace: "dc_smarthost='{{ debian_mail_smarthost.name ~ '::' ~ debian_mail_smarthost.port }}'"
+      register: dc_smarthost
+
+    - name: "exim: dc_readhost"
+      replace:
+      args:
+        dest: /etc/exim4/update-exim4.conf.conf
+        regexp: "^dc_readhost=.*$"
+        replace: "dc_readhost='{{ inventory_hostname }}.{{ domainname }}'"
+      register: dc_readhost
+
+  when: debian_mail_smarthost is defined
+
+# COMMON
 - name: "exim: dc_other_hostnames"
   replace:
   args:
@@ -29,14 +79,6 @@
     regexp: "^dc_local_interfaces=.*$"
     replace: "dc_local_interfaces='127.0.0.1 ; ::1'"
   register: dc_local_interfaces
-
-- name: "exim: dc_readhost"
-  replace:
-  args:
-    dest: /etc/exim4/update-exim4.conf.conf
-    regexp: "^dc_readhost=.*$"
-    replace: "dc_readhost=''"
-  register: dc_readhost
 
 - name: "exim: dc_relay_domains"
   replace:
@@ -61,14 +103,6 @@
     regexp: "^dc_relay_nets=.*$"
     replace: "dc_relay_nets=''"
   register: dc_relay_nets
-
-- name: "exim: dc_smarthost"
-  replace:
-  args:
-    dest: /etc/exim4/update-exim4.conf.conf
-    regexp: "^dc_smarthost=.*$"
-    replace: "dc_smarthost=''"
-  register: dc_smarthost
 
 - name: "exim: dc_use_split_config"
   replace:
