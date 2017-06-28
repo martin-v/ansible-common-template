@@ -37,5 +37,7 @@ ducks() { du -cks $@* | sort -rn | head -11 }
 httpShare(){ echo "link: http://`hostname`:8080/$1"; {echo -e "HTTP/1.1 200 OK\r\nContent-Type: `file -b -i $1`\r\n\r\n"; cat $1;} | nc -l 8080; }
 
 
-# load config for desktop computer if exists
+# load config desktop/unmanaged config if it exists
 xsource "${ZDOTDIR:-${HOME}}/.zshrc.desktop"
+xsource "${ZDOTDIR:-${HOME}}/.zshrc.unmanaged"
+
