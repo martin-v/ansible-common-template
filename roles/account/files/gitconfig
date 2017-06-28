@@ -8,11 +8,20 @@
 
 [alias]
 	;  shortcuts
-	s = status
-	c = commit
 	a = add
+	b = branch
+	c = checkout
 	d = diff
 	l = log
+	g = cola
+	p = push
+	s = status
+	r = rebase
+
+	f = fetch --prune --tags --all
+	u = rebase origin/develop
+
+	up = "!git fetch --all && git merge --ff-only && git rebase origin/develop && git push -f"
 
 	; fancy graph of commit history
 	graph = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
