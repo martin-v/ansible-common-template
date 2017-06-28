@@ -3,5 +3,5 @@
 *.swp
 *.tmp
 *~
-playbook.retry
+
 secrets.yml
