@@ -2,6 +2,11 @@
 
 - etckeeper: action=begin
 
+- name: Install exim4
+  package: name=exim4 state=present
+  # normaly this is done by debian installer,
+  # but many cloud provider remove exim from image.
+
 
 - name: set mailname
   copy: dest=/etc/mailname content="{{ inventory_hostname }}.{{ domainname }}\n"
