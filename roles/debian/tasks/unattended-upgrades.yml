@@ -6,8 +6,23 @@
 - name: Install package
   apt: name=unattended-upgrades state=present
 
-- name: Configure unattended-upgrades
-  copy: src=unattended-upgrades dest=/etc/apt/apt.conf.d/50unattended-upgrades force=yes
+- name: Set apt Unattended-Upgrade::MinimalSteps
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^/?/?Unattended-Upgrade::MinimalSteps '
+    line: 'Unattended-Upgrade::MinimalSteps "true";'
+
+- name: Set apt Unattended-Upgrade::Mail
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^/?/?Unattended-Upgrade::Mail '
+    line: 'Unattended-Upgrade::Mail "root";'
+
+- name: Set apt Unattended-Upgrade::MailOnlyOnError
+  lineinfile:
+    path: /etc/apt/apt.conf.d/50unattended-upgrades
+    regexp: '^/?/?Unattended-Upgrade::MailOnlyOnError '
+    line: 'Unattended-Upgrade::MailOnlyOnError "true";'
 
 
 - etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.unattended-upgrades' rev={{ revision }}"
