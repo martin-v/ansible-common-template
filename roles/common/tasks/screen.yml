@@ -3,8 +3,41 @@
 - etckeeper: action=begin
 
 
-- name: Deploy screenrc
-  copy: src=screenrc dest=/etc/screenrc force=yes
+- name: Set screen startup_message off
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^#?startup_message '
+    line: 'startup_message off'
+
+- name: Set screen vbell off
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^#?vbell '
+    line: 'vbell off'
+
+- name: Set screen vbell_msg empty
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^#?vbell_msg '
+    line: 'vbell_msg ""'
+
+- name: Comment in screen xterm scrollback buffer support
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^#?termcapinfo xterm|xterms|xs|rxvt ti@:te@'
+    line: 'termcapinfo xterm|xterms|xs|rxvt ti@:te@'
+
+- name: Set screen hardstatus alwayslastline
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^hardstatus (always)?(lastline|message|ignore|string)'
+    line: "hardstatus alwayslastline '%{= kw} %-Lw%{= KW}%n%1f %t%{-}%+Lw%='"
+
+- name: Set screen altscreen on
+  lineinfile:
+    path: /etc/screenrc
+    regexp: '^#altscreen '
+    line: 'altscreen on'
 
 
 - etckeeper: "action=commit msg='ansible: {{ vars['role_name'] }}.screen' rev={{ revision }}"
