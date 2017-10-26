@@ -35,6 +35,7 @@
   - kpartx
   - git
   - apg
+  - bsd-mailx
 
   # Admin tools
   - htop
