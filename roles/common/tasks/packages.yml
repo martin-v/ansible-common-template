@@ -5,7 +5,7 @@
 
 - name: Upgrade packages for Debian based systems
   tags: [ packages, updates, upgrades ]
-  apt: upgrade=yes update_cache=yes
+  apt: update_cache=yes upgrade=dist
   when: ansible_os_family == 'Debian'
 
 - name: Upgrade packages for RedHat based systems
