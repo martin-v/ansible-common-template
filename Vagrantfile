@@ -1,5 +1,8 @@
 Vagrant.configure(2) do |config|
-	config.vm.box = "martin-v/debian-jessie-libvirt"
+	config.vm.box = "debian/stretch64"
+	config.vm.box_version = "9.1.0"
+	config.vm.synced_folder ".", "/vagrant", disabled: true
+
 	config.vm.provider :libvirt do |domain|
 		domain.nested = true
 		domain.volume_cache = 'none'
